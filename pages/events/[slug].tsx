@@ -1,8 +1,9 @@
 import React from 'react'
+import Layout from '../../components/Layout'
 
 const Event = () => {
   return (
-    <div>Event</div>
+    <Layout>Event</Layout>
   )
 }
 
