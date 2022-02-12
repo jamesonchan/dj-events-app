@@ -29,13 +29,18 @@ export default Home;
 
 export const getStaticProps = async () => {
   const responseData = await axios
-    .get(`${API_URL}/api/events`)
-    .then((res) => res.data)
+    .get(`${API_URL}/api/events`, {
+      params: {
+        sort: "date:ASC",
+        populate: "image",
+      },
+    })
+    .then((res) => res.data.data)
     .catch((error) => console.log(error));
 
   return {
     props: {
-      events: responseData.slice(0,3),
+      events: responseData,
       revalidate: 1,
     },
   };

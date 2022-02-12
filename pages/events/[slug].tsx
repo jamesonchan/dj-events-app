@@ -2,16 +2,22 @@ import React from "react";
 import Layout from "@/components/Layout";
 import axios from "axios";
 import { API_URL } from "config";
-import { Event, Events } from "types";
-import { GetServerSidePropsContext, NextPage } from "next";
+import { Events } from "types";
+import { GetServerSideProps, GetServerSidePropsContext, NextPage } from "next";
 import styles from "@/styles/Event.module.css";
 import { FaPencilAlt, FaTimes } from "react-icons/Fa";
 import Link from "next/link";
 import Image from "next/image";
+import qs from "qs";
 
-const Event: NextPage<Event> = ({ evt }) => {
+const Event: NextPage<{ evt: Events }> = ({ evt }) => {
   const deleteEvent = () => {};
 
+  const { url: mediumUrl } =
+    evt.attributes.image.data.attributes.formats.medium;
+
+  const { date, time, name, performers, description, venue, address } =
+    evt.attributes;
   return (
     <Layout>
       <div className={styles.event}>
@@ -26,20 +32,20 @@ const Event: NextPage<Event> = ({ evt }) => {
           </a>
         </div>
         <span>
-          {evt.date} at {evt.time}
+          {new Date(date).toLocaleDateString("en-US")} at {time}
         </span>
-        <h1>{evt.name}</h1>
-        {evt.image && (
+        <h1>{name}</h1>
+        {mediumUrl && (
           <div className={styles.image}>
-            <Image src={evt.image} width={960} height={600} alt="Large image" />
+            <Image src={mediumUrl} width={960} height={600} alt="Large image" />
           </div>
         )}
         <h3>Performers:</h3>
-        <p>{evt.performers}</p>
+        <p>{performers}</p>
         <h3>Description:</h3>
-        <p>{evt.description}</p>
-        <h3>Venue: {evt.venue}</h3>
-        <p>{evt.address}</p>
+        <p>{description}</p>
+        <h3>Venue: {venue}</h3>
+        <p>{address}</p>
         <Link href="/events">
           <a className={styles.back}>{"<"} Go Back</a>
         </Link>
@@ -53,11 +59,11 @@ export default Event;
 export const getStaticPaths = async () => {
   const responseData = await axios
     .get(`${API_URL}/api/events`)
-    .then((res) => res.data)
+    .then((res) => res.data.data)
     .catch((error) => console.log(error));
   const paths = responseData.map((data: Events) => ({
     params: {
-      slug: data.slug,
+      slug: data.attributes.slug,
     },
   }));
 
@@ -68,8 +74,18 @@ export const getStaticPaths = async () => {
 };
 export const getStaticProps = async ({ params: { slug } }: any) => {
   const responseData = await axios
-    .get(`${API_URL}/api/events/${slug}`)
-    .then((res) => res.data)
+    .get(`${API_URL}/api/events`, {
+      params: {
+        filters: {
+          slug: { $eq: slug },
+        },
+        populate: "image",
+      },
+      paramsSerializer(params) {
+        return qs.stringify(params);
+      },
+    })
+    .then((res) => res.data.data)
     .catch((error) => console.log(error));
 
   return {

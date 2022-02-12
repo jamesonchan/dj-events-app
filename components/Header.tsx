@@ -1,6 +1,7 @@
 import Link from "next/link";
 import React from "react";
 import styles from "@/styles/Header.module.css";
+import Search from "./Search";
 
 const Header = () => {
   return (
@@ -10,11 +11,17 @@ const Header = () => {
           <a>DJ Events</a>
         </Link>
       </div>
+      <Search />
       <nav>
         <ul>
           <li>
-            <Link href='/events'>
+            <Link href="/events">
               <a>Events</a>
+            </Link>
+          </li>
+          <li>
+            <Link href="/events/add">
+              <a>Add Event</a>
             </Link>
           </li>
         </ul>

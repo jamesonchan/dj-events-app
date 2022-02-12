@@ -1,16 +1,19 @@
 import React from "react";
 import Image from "next/image";
 import styles from "@/styles/EventItem.module.css";
-import { Event } from "types";
+import { Events } from "types";
 import { NextPage } from "next";
 import Link from "next/link";
 
-const EventItem: NextPage<Event> = ({ evt }) => {
+const EventItem: NextPage<{ evt: Events }> = ({ evt }) => {
+  const { url: thumbnailUrl } =
+    evt.attributes.image.data.attributes.formats.thumbnail;
+  const { date, time, name, slug } = evt.attributes;
   return (
     <div className={styles.event}>
       <div className={styles.img}>
         <Image
-          src={evt.image ? evt.image : "/images/event-default.png"}
+          src={thumbnailUrl ? thumbnailUrl : "/images/event-default.png"}
           width={170}
           height={100}
           objectFit="cover"
@@ -19,12 +22,12 @@ const EventItem: NextPage<Event> = ({ evt }) => {
       </div>
       <div className={styles.info}>
         <span>
-          {evt.date}at{evt.time}
+          {new Date(date).toLocaleDateString('en-US')} at {time}
         </span>
-        <h3>{evt.name}</h3>
+        <h3>{name}</h3>
       </div>
       <div className={styles.link}>
-        <Link href={`/events/${evt.slug}`}>
+        <Link href={`/events/${slug}`}>
           <a className="btn">Details</a>
         </Link>
       </div>

@@ -4,19 +4,41 @@ export interface LayoutProps {
   keywords?: string;
 }
 
-export interface Events {
-  id: string;
-  name: string;
-  slug: string;
-  venue: string;
-  address: string;
-  performers: string;
-  date: string;
-  time: string;
-  description: string;
-  image: string;
+export interface Images {
+  data: {
+    attributes: {
+      formats: {
+        large: {
+          url: string;
+        };
+        medium: {
+          url: string;
+        };
+        small: {
+          url: string;
+        };
+        thumbnail: {
+          url: string;
+        };
+      };
+    };
+  };
 }
 
-export type Event={
-  evt:Events
+export interface Events {
+  id: string;
+  attributes: {
+    name: string;
+    slug: string;
+    venue: string;
+    address: string;
+    performers: string;
+    date: string;
+    time: string;
+    description: string;
+    publishedAt: string;
+    updatedAt: string;
+    image: Images;
+  };
 }
+
