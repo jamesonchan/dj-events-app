@@ -42,3 +42,12 @@ export interface Events {
   };
 }
 
+export interface AddEventsState {
+  name: string;
+  address: string;
+  performers: string;
+  date: string;
+  time: string;
+  venue: string;
+  description: string;
+}

@@ -9,9 +9,19 @@ import { FaPencilAlt, FaTimes } from "react-icons/Fa";
 import Link from "next/link";
 import Image from "next/image";
 import qs from "qs";
+import { ToastContainer, toast } from "react-toastify";
+import { useRouter } from "next/router";
 
 const Event: NextPage<{ evt: Events }> = ({ evt }) => {
-  const deleteEvent = () => {};
+  const router = useRouter();
+  const deleteEvent = async (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (confirm("Are your sure?")) {
+      await axios
+        .delete(`${API_URL}/api/events/${evt.id}`)
+        .catch((error) => toast.error(error.message));
+    }
+    router.push("/events");
+  };
 
   const { url: mediumUrl } =
     evt.attributes.image.data.attributes.formats.medium;
@@ -35,6 +45,7 @@ const Event: NextPage<{ evt: Events }> = ({ evt }) => {
           {new Date(date).toLocaleDateString("en-US")} at {time}
         </span>
         <h1>{name}</h1>
+        <ToastContainer />
         {mediumUrl && (
           <div className={styles.image}>
             <Image src={mediumUrl} width={960} height={600} alt="Large image" />
