@@ -51,3 +51,15 @@ export interface AddEventsState {
   venue: string;
   description: string;
 }
+
+export interface ModalProps {
+  show: boolean;
+  onClose: () => void;
+  title: string;
+}
+
+export interface ImageUploadProps {
+  evtId: string;
+  imageUploaded: () => void;
+}
+

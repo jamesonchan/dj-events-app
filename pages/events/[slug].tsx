@@ -23,9 +23,6 @@ const Event: NextPage<{ evt: Events }> = ({ evt }) => {
     router.push("/events");
   };
 
-  const { url: mediumUrl } =
-    evt.attributes.image.data.attributes.formats.medium;
-
   const { date, time, name, performers, description, venue, address } =
     evt.attributes;
   return (
@@ -46,11 +43,16 @@ const Event: NextPage<{ evt: Events }> = ({ evt }) => {
         </span>
         <h1>{name}</h1>
         <ToastContainer />
-        {mediumUrl && (
+        {evt.attributes.image.data?.attributes.formats.medium.url ? (
           <div className={styles.image}>
-            <Image src={mediumUrl} width={960} height={600} alt="Large image" />
+            <Image
+              src={evt.attributes.image.data?.attributes.formats.medium as any}
+              width={960}
+              height={600}
+              alt="Large image"
+            />
           </div>
-        )}
+        ) : null}
         <h3>Performers:</h3>
         <p>{performers}</p>
         <h3>Description:</h3>

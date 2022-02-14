@@ -11,25 +11,13 @@ import { API_URL } from "config";
 import { GetServerSidePropsContext, NextPage } from "next";
 import moment from "moment";
 import Image from "next/image";
-import { FaImage } from "react-icons/fa";
+import { FaImage } from "react-icons/Fa";
+import Modal from "@/components/Modal";
+import ImageUpload from "@/components/ImageUpload";
 
 const EditEvent: NextPage<{ evt: Events }> = ({ evt }) => {
-  const {
-    name,
-    performers,
-    address,
-    venue,
-    date,
-    time,
-    description,
-    image: {
-      data: {
-        attributes: {
-          formats: { thumbnail },
-        },
-      },
-    },
-  } = evt.attributes;
+  const { name, performers, address, venue, date, time, description } =
+    evt.attributes;
   const [values, setValues] = useState<AddEventsState>({
     name,
     performers,
@@ -40,8 +28,9 @@ const EditEvent: NextPage<{ evt: Events }> = ({ evt }) => {
     description,
   });
   const [imagePreview, setImagePreview] = useState(
-    thumbnail.url ? thumbnail.url : null
+    evt.attributes.image.data?.attributes.formats.thumbnail.url
   );
+  const [showModal, setShowModal] = useState(false);
   const router = useRouter();
 
   console.log(evt);
@@ -73,6 +62,19 @@ const EditEvent: NextPage<{ evt: Events }> = ({ evt }) => {
   ) => {
     const { name, value } = e.target;
     setValues({ ...values, [name]: value });
+  };
+
+  const imageUploaded = async () => {
+    const responseData = await axios
+      .get(`${API_URL}/api/events/${evt.id}`, {
+        params: {
+          populate: "image",
+        },
+      })
+      .then((res) => res.data.data.attributes)
+      .catch((error) => toast.error(error.message));
+    setImagePreview(responseData.image?.data.attributes.formats.thumbnail.url);
+    setShowModal(false);
   };
 
   return (
@@ -165,10 +167,17 @@ const EditEvent: NextPage<{ evt: Events }> = ({ evt }) => {
         </div>
       )}
       <div>
-        <button className="btn-secondary">
-        <FaImage /> <span>Set Image</span>
+        <button className="btn-secondary" onClick={() => setShowModal(true)}>
+          <FaImage /> <span>Set Image</span>
         </button>
       </div>
+      <Modal
+        show={showModal}
+        onClose={() => setShowModal(false)}
+        title="Event Image"
+      >
+        <ImageUpload evtId={evt.id} imageUploaded={imageUploaded} />
+      </Modal>
     </Layout>
   );
 };

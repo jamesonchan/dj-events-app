@@ -6,14 +6,16 @@ import { NextPage } from "next";
 import Link from "next/link";
 
 const EventItem: NextPage<{ evt: Events }> = ({ evt }) => {
-  const { url: thumbnailUrl } =
-    evt.attributes.image.data.attributes.formats.thumbnail;
   const { date, time, name, slug } = evt.attributes;
   return (
     <div className={styles.event}>
       <div className={styles.img}>
         <Image
-          src={thumbnailUrl ? thumbnailUrl : "/images/event-default.png"}
+          src={
+            evt.attributes.image.data?.attributes.formats.thumbnail.url
+              ? evt.attributes.image.data?.attributes.formats.thumbnail.url
+              : "/images/event-default.png"
+          }
           width={170}
           height={100}
           objectFit="cover"
@@ -22,7 +24,7 @@ const EventItem: NextPage<{ evt: Events }> = ({ evt }) => {
       </div>
       <div className={styles.info}>
         <span>
-          {new Date(date).toLocaleDateString('en-US')} at {time}
+          {new Date(date).toLocaleDateString("en-US")} at {time}
         </span>
         <h3>{name}</h3>
       </div>
