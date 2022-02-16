@@ -55,7 +55,7 @@ export const AuthProvider = ({ children }: Props) => {
         password,
       });
       setUser(resData.data.user);
-      router.push('/account/dashboard')
+      router.push("/account/dashboard");
     } catch (error: any) {
       setError(error.message);
       setError(null);
@@ -69,6 +69,7 @@ export const AuthProvider = ({ children }: Props) => {
         password,
       });
       setUser(resData.data.user);
+      router.push("/account/dashboard");
     } catch (error: any) {
       setError(error.message);
       setError(null);

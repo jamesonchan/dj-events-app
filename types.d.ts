@@ -42,6 +42,45 @@ export interface Events {
   };
 }
 
+export interface UserImages {
+  formats: {
+    large: {
+      url: string;
+    };
+    medium: {
+      url: string;
+    };
+    small: {
+      url: string;
+    };
+    thumbnail: {
+      url: string;
+    };
+  };
+}
+
+export interface User {
+  id: number;
+  email: string;
+  username: string;
+}
+
+export interface UserEvents {
+  id: number;
+  name: string;
+  slug: string;
+  venue: string;
+  address: string;
+  performers: string;
+  date: string;
+  time: string;
+  description: string;
+  publishedAt: string;
+  updatedAt: string;
+  image: UserImages;
+  user: User;
+}
+
 export interface AddEventsState {
   name: string;
   address: string;
