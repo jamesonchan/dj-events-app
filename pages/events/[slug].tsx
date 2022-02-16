@@ -13,6 +13,7 @@ import { ToastContainer, toast } from "react-toastify";
 import { useRouter } from "next/router";
 
 const Event: NextPage<{ evt: Events }> = ({ evt }) => {
+  console.log(evt);
   const router = useRouter();
   const deleteEvent = async (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (confirm("Are your sure?")) {
@@ -25,6 +26,8 @@ const Event: NextPage<{ evt: Events }> = ({ evt }) => {
 
   const { date, time, name, performers, description, venue, address } =
     evt.attributes;
+  const { url: mediumUrl } =
+    evt.attributes.image.data.attributes.formats.medium;
   return (
     <Layout>
       <div className={styles.event}>
@@ -43,14 +46,9 @@ const Event: NextPage<{ evt: Events }> = ({ evt }) => {
         </span>
         <h1>{name}</h1>
         <ToastContainer />
-        {evt.attributes.image.data?.attributes.formats.medium.url ? (
+        {mediumUrl ? (
           <div className={styles.image}>
-            <Image
-              src={evt.attributes.image.data?.attributes.formats.medium as any}
-              width={960}
-              height={600}
-              alt="Large image"
-            />
+            <Image src={mediumUrl} width={960} height={600} alt="Large image" />
           </div>
         ) : null}
         <h3>Performers:</h3>

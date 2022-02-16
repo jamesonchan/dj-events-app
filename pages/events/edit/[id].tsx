@@ -167,7 +167,10 @@ const EditEvent: NextPage<{ evt: Events }> = ({ evt }) => {
         </div>
       )}
       <div>
-        <button className="btn-secondary" onClick={() => setShowModal(true)}>
+        <button
+          className="btn-secondary btn-icon"
+          onClick={() => setShowModal(true)}
+        >
           <FaImage /> <span>Set Image</span>
         </button>
       </div>
@@ -188,6 +191,8 @@ export const getServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
   const { id } = context.query;
+  const { req } = context;
+  console.log(req.headers.cookie);
   const responseData = await axios
     .get(`${API_URL}/api/events/${id}`, {
       params: {

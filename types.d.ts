@@ -63,3 +63,13 @@ export interface ImageUploadProps {
   imageUploaded: () => void;
 }
 
+interface RegisterUser {
+  username: string;
+  email: string;
+  password: string;
+}
+
+interface LoginUser {
+  email: string;
+  password: string;
+}
