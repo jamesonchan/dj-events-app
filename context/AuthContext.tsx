@@ -57,7 +57,7 @@ export const AuthProvider = ({ children }: Props) => {
       setUser(resData.data.user);
       router.push("/account/dashboard");
     } catch (error: any) {
-      setError(error.message);
+      setError(error.response.data);
       setError(null);
     }
   };
@@ -71,7 +71,7 @@ export const AuthProvider = ({ children }: Props) => {
       setUser(resData.data.user);
       router.push("/account/dashboard");
     } catch (error: any) {
-      setError(error.message);
+      setError(error.response.data);
       setError(null);
     }
   };
@@ -86,7 +86,6 @@ export const AuthProvider = ({ children }: Props) => {
       .get(`${NEXT_URL}/api/user`)
       .then((res) => setUser(res.data))
       .catch((error) => setUser(null));
-    router.push("/account/dashboard");
   };
 
   return (

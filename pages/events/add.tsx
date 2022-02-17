@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { API_URL } from "config";
 
 const AddEvent = () => {
@@ -31,14 +31,25 @@ const AddEvent = () => {
       toast.error("Please fill in all fields!");
     }
 
-   const responseData =  await axios
-      .post(`${API_URL}/api/events`, {
-        data: values,
-      })
-      .then((res) => res.data.data.attributes)
-      .catch((error) => toast.error(error.message));
+    try {
+      const responseData = await axios
+        .post(`${API_URL}/api/events`, {
+          data: values,
+        })
+        .then((res) => res.data.data.attributes)
+        .catch((error: AxiosError) => {
+          if (
+            error.response?.status === 403 ||
+            error.response?.status === 401
+          ) {
+            toast.error("token not included");
+          } else {
+            toast.error("something went wrong");
+          }
+        });
 
-    router.push(`/events/${responseData.slug}`)
+      router.push(`/events/${responseData.slug}`);
+    } catch (error) {}
   };
 
   const handleInputChange = (

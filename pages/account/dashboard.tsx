@@ -18,9 +18,13 @@ const Dashboard: NextPage<{ events: UserEvents[] }> = ({ events }) => {
       <div className={styles.dash}>
         <h1>Dashboard</h1>
         <h3>My Events</h3>
-        {events.map((evt) => (
-          <DashboardEvent key={evt.id} evt={evt} handleDelete={deleteEvent} />
-        ))}
+        {events ? (
+          events.map((evt) => (
+            <DashboardEvent key={evt.id} evt={evt} handleDelete={deleteEvent} />
+          ))
+        ) : (
+          <div>Something went wrong, please log in</div>
+        )}
       </div>
     </Layout>
   );
@@ -42,7 +46,7 @@ export const getServerSideProps = async (
     .catch((error) => console.log(error.message));
   return {
     props: {
-      events: resData,
+      events: resData || null,
     },
   };
 };

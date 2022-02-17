@@ -29,7 +29,9 @@ export default async function handler(
       );
       res.status(200).json(strapiRes.data);
     } catch (error: any) {
-      res.status(400).json(error);
+      res
+        .status(error.response.data.error.status)
+        .json(error.response.data.error.message);
     }
 
     // res.status(200).json(strapiRes);
