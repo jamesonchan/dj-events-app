@@ -1,28 +1,16 @@
-import React from "react";
 import Layout from "@/components/Layout";
+import styles from "@/styles/Event.module.css";
 import axios from "axios";
 import { API_URL } from "config";
-import { Events } from "types";
-import { GetServerSideProps, GetServerSidePropsContext, NextPage } from "next";
-import styles from "@/styles/Event.module.css";
-import { FaPencilAlt, FaTimes } from "react-icons/Fa";
-import Link from "next/link";
+import { NextPage } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import qs from "qs";
-import { ToastContainer, toast } from "react-toastify";
-import { useRouter } from "next/router";
+import React from "react";
+import { ToastContainer } from "react-toastify";
+import { Events } from "types";
 
 const Event: NextPage<{ evt: Events }> = ({ evt }) => {
-  console.log(evt);
-  const router = useRouter();
-  const deleteEvent = async (e: React.MouseEvent<HTMLAnchorElement>) => {
-    if (confirm("Are your sure?")) {
-      await axios
-        .delete(`${API_URL}/api/events/${evt.id}`)
-        .catch((error) => toast.error(error.message));
-    }
-    router.push("/events");
-  };
 
   const { date, time, name, performers, description, venue, address } =
     evt.attributes;
@@ -31,16 +19,6 @@ const Event: NextPage<{ evt: Events }> = ({ evt }) => {
   return (
     <Layout>
       <div className={styles.event}>
-        <div className={styles.controls}>
-          <Link href={`/events/edit/${evt.id}`}>
-            <a>
-              <FaPencilAlt /> Edit event
-            </a>
-          </Link>
-          <a href="#" className={styles.delete} onClick={deleteEvent}>
-            <FaTimes /> Delete event
-          </a>
-        </div>
         <span>
           {new Date(date).toLocaleDateString("en-US")} at {time}
         </span>

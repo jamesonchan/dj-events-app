@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { API_URL } from "config";
 import { GetServerSidePropsContext, NextPage } from "next";
 import moment from "moment";
@@ -14,8 +14,12 @@ import Image from "next/image";
 import { FaImage } from "react-icons/Fa";
 import Modal from "@/components/Modal";
 import ImageUpload from "@/components/ImageUpload";
+import { parseCookies } from "../../../helpers";
 
-const EditEvent: NextPage<{ evt: Events }> = ({ evt }) => {
+const EditEvent: NextPage<{ evt: Events; token: string }> = ({
+  evt,
+  token,
+}) => {
   const { name, performers, address, venue, date, time, description } =
     evt.attributes;
   const [values, setValues] = useState<AddEventsState>({
@@ -45,14 +49,31 @@ const EditEvent: NextPage<{ evt: Events }> = ({ evt }) => {
       toast.error("Please fill in all fields!");
     }
 
-    const responseData = await axios
-      .put(`${API_URL}/api/events/${evt.id}`, {
-        data: values,
-      })
-      .then((res) => res.data.data.attributes)
-      .catch((error) => toast.error(error.message));
-
-    router.push(`/events/${responseData.slug}`);
+    try {
+      const responseData = await axios
+        .put(
+          `${API_URL}/api/events/${evt.id}`,
+          {
+            data: values,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((res) => res.data.data.attributes)
+        .catch((error: AxiosError) => {
+          if (
+            error.response?.status === 403 ||
+            error.response?.status === 401
+          ) {
+            toast.error("Unauthorized");
+            return;
+          }
+        });
+      router.push(`/events/${responseData.slug}`);
+    } catch (error) {}
   };
 
   const handleInputChange = (
@@ -72,7 +93,7 @@ const EditEvent: NextPage<{ evt: Events }> = ({ evt }) => {
         },
       })
       .then((res) => res.data.data.attributes)
-      .catch((error) => toast.error(error.message));
+      .catch((error: AxiosError) => toast.error(error.response?.data));
     setImagePreview(responseData.image?.data.attributes.formats.thumbnail.url);
     setShowModal(false);
   };
@@ -179,7 +200,11 @@ const EditEvent: NextPage<{ evt: Events }> = ({ evt }) => {
         onClose={() => setShowModal(false)}
         title="Event Image"
       >
-        <ImageUpload evtId={evt.id} imageUploaded={imageUploaded} />
+        <ImageUpload
+          evtId={evt.id}
+          imageUploaded={imageUploaded}
+          token={token}
+        />
       </Modal>
     </Layout>
   );
@@ -191,8 +216,8 @@ export const getServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
   const { id } = context.query;
-  const { req } = context;
-  console.log(req.headers.cookie);
+  const { token } = parseCookies(context.req);
+
   const responseData = await axios
     .get(`${API_URL}/api/events/${id}`, {
       params: {
@@ -205,6 +230,7 @@ export const getServerSideProps = async (
   return {
     props: {
       evt: responseData,
+      token,
     },
   };
 };

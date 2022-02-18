@@ -8,8 +8,11 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios, { AxiosError } from "axios";
 import { API_URL } from "config";
+import { GetServerSidePropsContext, NextPage } from "next";
+import { parseCookies } from "../../helpers";
 
-const AddEvent = () => {
+const AddEvent: NextPage<{ token: string }> = ({ token }) => {
+
   const [values, setValues] = useState<AddEventsState>({
     name: "",
     performers: "",
@@ -33,9 +36,17 @@ const AddEvent = () => {
 
     try {
       const responseData = await axios
-        .post(`${API_URL}/api/events`, {
-          data: values,
-        })
+        .post(
+          `${API_URL}/api/events`,
+          {
+            data: values,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
         .then((res) => res.data.data.attributes)
         .catch((error: AxiosError) => {
           if (
@@ -146,3 +157,15 @@ const AddEvent = () => {
 };
 
 export default AddEvent;
+
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  const { token } = parseCookies(context.req);
+
+  return {
+    props: {
+      token,
+    },
+  };
+};

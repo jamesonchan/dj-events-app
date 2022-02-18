@@ -100,6 +100,7 @@ export interface ModalProps {
 export interface ImageUploadProps {
   evtId: string;
   imageUploaded: () => void;
+  token:string
 }
 
 interface RegisterUser {

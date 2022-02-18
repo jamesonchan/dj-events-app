@@ -2,11 +2,15 @@ import { NextPage } from "next";
 import React, { useState } from "react";
 import { ImageUploadProps } from "types";
 import styles from "@/styles/Form.module.css";
-import axios from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import { API_URL } from "config";
 import { toast, ToastContainer } from "react-toastify";
 
-const ImageUpload: NextPage<ImageUploadProps> = ({ evtId, imageUploaded }) => {
+const ImageUpload: NextPage<ImageUploadProps> = ({
+  evtId,
+  imageUploaded,
+  token,
+}) => {
   const [image, setImage] = useState<any>();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -17,9 +21,13 @@ const ImageUpload: NextPage<ImageUploadProps> = ({ evtId, imageUploaded }) => {
     formData.append("field", "image");
 
     await axios
-      .post(`${API_URL}/api/upload`, formData)
-      .then((res) => console.log(res.data))
-      .catch((error) => toast.error(error.message));
+      .post(`${API_URL}/api/upload`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res: AxiosResponse) => console.log(res.data))
+      .catch((error: AxiosError) => toast.error(error.response?.data));
 
     imageUploaded();
   };
