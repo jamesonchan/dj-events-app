@@ -45,7 +45,6 @@ const EventMap: NextPage<{ evt: Events }> = ({ evt }) => {
       mapStyle="mapbox://styles/jamesonchan/cksjuwuy300ep18qyceg3onvg"
       {...viewport}
       mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN}
-      onViewportChange={(viewport) => setViewport(viewport)}
     >
       {/* <Marker key={evt.id} latitude={lat} longitude={lng}>
         <Image src="/images/pin.svg" width={30} height={30} alt="map" />

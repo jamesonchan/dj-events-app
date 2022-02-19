@@ -60,6 +60,8 @@ $RECYCLE.BIN/
 *.out
 *.pid
 
+.vscode
+yarn.lock
 
 ############################
 # Logs and databases

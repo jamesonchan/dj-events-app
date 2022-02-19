@@ -3,7 +3,7 @@ import Layout from "@/components/Layout";
 import styles from "@/styles/Event.module.css";
 import axios from "axios";
 import { API_URL } from "config";
-import { NextPage } from "next";
+import { GetServerSidePropsContext, NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import qs from "qs";
@@ -48,24 +48,51 @@ const Event: NextPage<{ evt: Events }> = ({ evt }) => {
 
 export default Event;
 
-export const getStaticPaths = async () => {
-  const responseData = await axios
-    .get(`${API_URL}/api/events`)
-    .then((res) => res.data.data)
-    .catch((error) => console.log(error));
-  const paths = responseData.map((data: Events) => ({
-    params: {
-      slug: data.attributes.slug,
-    },
-  }));
+// export const getStaticPaths = async () => {
+//   const responseData = await axios
+//     .get(`${API_URL}/api/events`)
+//     .then((res) => res.data.data)
+//     .catch((error) => console.log(error));
+//   const paths = responseData.map((data: Events) => ({
+//     params: {
+//       slug: data.attributes.slug,
+//     },
+//   }));
 
-  return {
-    paths,
-    fallback: true,
-  };
-};
-export const getStaticProps = async ({ params: { slug } }: any) => {
-  const responseData = await axios
+//   return {
+//     paths,
+//     fallback: true,
+//   };
+// };
+// export const getStaticProps = async ({ params: { slug } }: any) => {
+//   const responseData = await axios
+//     .get(`${API_URL}/api/events`, {
+//       params: {
+//         filters: {
+//           slug: { $eq: slug },
+//         },
+//         populate: "image",
+//       },
+//       paramsSerializer(params) {
+//         return qs.stringify(params);
+//       },
+//     })
+//     .then((res) => res.data.data)
+//     .catch((error) => console.log(error));
+
+//   return {
+//     props: {
+//       evt: responseData[0],
+//     },
+//     revalidate: 1,
+//   };
+// };
+
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  const { slug } = context.query;
+  const resData = await axios
     .get(`${API_URL}/api/events`, {
       params: {
         filters: {
@@ -82,8 +109,7 @@ export const getStaticProps = async ({ params: { slug } }: any) => {
 
   return {
     props: {
-      evt: responseData[0],
+      evt: resData[0],
     },
-    revalidate: 1,
   };
 };
