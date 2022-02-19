@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "@/styles/Modal.module.css";
-import { FaTimes } from "react-icons/Fa";
+import { FaTimes } from "react-icons/fa";
 import ReactDOM from "react-dom";
 import { NextPage } from "next";
 import { ModalProps } from "types";

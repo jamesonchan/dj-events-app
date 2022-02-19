@@ -11,7 +11,7 @@ import { API_URL } from "config";
 import { GetServerSidePropsContext, NextPage } from "next";
 import moment from "moment";
 import Image from "next/image";
-import { FaImage } from "react-icons/Fa";
+import { FaImage } from "react-icons/fa";
 import Modal from "@/components/Modal";
 import ImageUpload from "@/components/ImageUpload";
 import { parseCookies } from "../../../helpers";

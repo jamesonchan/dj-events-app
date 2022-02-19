@@ -2,7 +2,7 @@ import Link from "next/link";
 import React from "react";
 import styles from "@/styles/Header.module.css";
 import Search from "./Search";
-import { FaSignInAlt, FaSignOutAlt } from "react-icons/Fa";
+import { FaSignInAlt, FaSignOutAlt } from "react-icons/fa";
 import { useAuth } from "context/AuthContext";
 
 const Header = () => {
