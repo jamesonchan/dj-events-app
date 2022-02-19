@@ -1,3 +1,4 @@
+import EventMap from "@/components/EventMap";
 import Layout from "@/components/Layout";
 import styles from "@/styles/Event.module.css";
 import axios from "axios";
@@ -11,7 +12,6 @@ import { ToastContainer } from "react-toastify";
 import { Events } from "types";
 
 const Event: NextPage<{ evt: Events }> = ({ evt }) => {
-
   const { date, time, name, performers, description, venue, address } =
     evt.attributes;
   const { url: mediumUrl } =
@@ -35,6 +35,9 @@ const Event: NextPage<{ evt: Events }> = ({ evt }) => {
         <p>{description}</p>
         <h3>Venue: {venue}</h3>
         <p>{address}</p>
+
+        <EventMap evt={evt} />
+
         <Link href="/events">
           <a className={styles.back}>{"<"} Go Back</a>
         </Link>
