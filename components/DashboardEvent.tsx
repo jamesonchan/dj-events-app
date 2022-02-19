@@ -2,7 +2,7 @@ import React from "react";
 import styles from "@/styles/DashboardEvent.module.css";
 import { NextPage } from "next";
 import { UserEvents } from "types";
-import { FaPencilAlt, FaTimes } from "react-icons/Fa";
+import { FaPencilAlt, FaTimes } from "react-icons/fa";
 import Link from "next/link";
 
 const DashboardEvent: NextPage<{
