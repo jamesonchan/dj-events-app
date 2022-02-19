@@ -1,6 +1,6 @@
 import Layout from "@/components/Layout";
 import React, { useEffect, useState } from "react";
-import { FaUser } from "react-icons/Fa";
+import { FaUser } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import styles from "@/styles/AuthForm.module.css";
